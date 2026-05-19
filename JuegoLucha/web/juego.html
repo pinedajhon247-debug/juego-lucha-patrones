@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JuegoLucha — Patrón Decorator</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0d0d1a;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    #arena {
+      background: #1a1a2e;
+      border-radius: 20px;
+      padding: 28px 24px;
+      width: 100%;
+      max-width: 640px;
+      border: 1px solid #0f3460;
+    }
+    .title {
+      text-align: center;
+      color: #e2c97e;
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-bottom: 6px;
+    }
+    .subtitle {
+      text-align: center;
+      color: #555;
+      font-size: 12px;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+    .fighters {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .fighter-card {
+      flex: 1;
+      background: #16213e;
+      border-radius: 14px;
+      padding: 16px 12px;
+      text-align: center;
+      border: 1px solid #0f3460;
+      transition: border-color 0.3s;
+    }
+    .fighter-card.active { border-color: #e2c97e; }
+    .fighter-name { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+    .fighter-avatar { font-size: 56px; margin: 8px 0; line-height: 1; }
+    .badges { display: flex; flex-wrap: wrap; gap: 4px; justify-content: center; margin: 8px 0; }
+    .badge { font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 600; }
+    .badge-fuerza   { background: #3c3489; color: #CECBF6; }
+    .badge-armadura { background: #0C447C; color: #B5D4F4; }
+    .badge-veneno   { background: #27500A; color: #C0DD97; }
+    .hp-label { font-size: 11px; color: #666; margin-bottom: 4px; }
+    .hp-bar { height: 10px; background: #0f3460; border-radius: 5px; overflow: hidden; }
+    .hp-fill { height: 100%; border-radius: 5px; transition: width 0.5s ease; }
+    .hp-fill-1 { background: #378ADD; }
+    .hp-fill-2 { background: #D85A30; }
+    .hp-val { font-size: 13px; font-weight: 600; margin-top: 4px; }
+    .vs { font-size: 30px; color: #e2c97e; font-weight: 700; align-self: center; padding-bottom: 36px; }
+    .log-box {
+      background: #0d0d1a;
+      border-radius: 10px;
+      padding: 14px 16px;
+      min-height: 140px;
+      max-height: 170px;
+      overflow-y: auto;
+      margin-bottom: 16px;
+      border: 1px solid #0f3460;
+    }
+    .log-line { font-size: 13px; color: #aaa; line-height: 1.8; }
+    .log-line.atk1  { color: #85B7EB; }
+    .log-line.atk2  { color: #F0997B; }
+    .log-line.bonus { color: #C0DD97; padding-left: 14px; }
+    .log-line.dmg   { color: #F7C1C1; padding-left: 14px; }
+    .log-line.turn  { color: #e2c97e; font-weight: 600; margin-top: 6px; }
+    .log-line.win   { color: #e2c97e; font-size: 16px; font-weight: 700; text-align: center; margin-top: 10px; }
+    .controls { display: flex; gap: 10px; justify-content: center; }
+    .btn {
+      padding: 11px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+    .btn:hover  { opacity: 0.85; }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn-turn  { background: #378ADD; color: #fff; }
+    .btn-reset { background: #3c3489; color: #fff; }
+    .fighter-card.shake { animation: shake 0.35s; }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      25%      { transform: translateX(-7px); }
+      75%      { transform: translateX(7px); }
+    }
+  </style>
+</head>
+<body>
+<div id="arena">
+  <div class="title">⚔ JUEGO DE LUCHA ⚔</div>
+  <div class="subtitle">PATRÓN DE DISEÑO: DECORATOR</div>
+
+  <div class="fighters">
+    <div class="fighter-card" id="card1">
+      <div class="fighter-name" style="color:#85B7EB;">Guerrero</div>
+      <div class="fighter-avatar">🧙</div>
+      <div class="badges">
+        <span class="badge badge-armadura">Armadura −5</span>
+        <span class="badge badge-fuerza">Fuerza +10</span>
+      </div>
+      <div class="hp-label">Vida</div>
+      <div class="hp-bar"><div class="hp-fill hp-fill-1" id="bar1" style="width:100%"></div></div>
+      <div class="hp-val" id="hp1" style="color:#85B7EB;">100 / 100</div>
+    </div>
+
+    <div class="vs">VS</div>
+
+    <div class="fighter-card" id="card2">
+      <div class="fighter-name" style="color:#F0997B;">Asesino</div>
+      <div class="fighter-avatar">🥷</div>
+      <div class="badges">
+        <span class="badge badge-veneno">Veneno +5</span>
+      </div>
+      <div class="hp-label">Vida</div>
+      <div class="hp-bar"><div class="hp-fill hp-fill-2" id="bar2" style="width:100%"></div></div>
+      <div class="hp-val" id="hp2" style="color:#F0997B;">80 / 80</div>
+    </div>
+  </div>
+
+  <div class="log-box" id="log">
+    <div class="log-line" style="color:#e2c97e; text-align:center;">
+      Presiona "Siguiente turno" para comenzar la batalla
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-turn"  id="btnTurn" onclick="nextTurn()">Siguiente turno ▶</button>
+    <button class="btn btn-reset" onclick="resetGame()">↺ Reiniciar</button>
+  </div>
+</div>
+
+<script>
+  let hp1 = 100, hp2 = 80;
+  const MAX1 = 100, MAX2 = 80;
+  let turno = 1, over = false;
+
+  function log(text, cls) {
+    const box = document.getElementById('log');
+    const d = document.createElement('div');
+    d.className = 'log-line ' + (cls || '');
+    d.textContent = text;
+    box.appendChild(d);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function updateBars() {
+    const p1 = Math.max(0, Math.round(hp1 / MAX1 * 100));
+    const p2 = Math.max(0, Math.round(hp2 / MAX2 * 100));
+    document.getElementById('bar1').style.width = p1 + '%';
+    document.getElementById('bar2').style.width = p2 + '%';
+    document.getElementById('hp1').textContent = Math.max(0, hp1) + ' / ' + MAX1;
+    document.getElementById('hp2').textContent = Math.max(0, hp2) + ' / ' + MAX2;
+  }
+
+  function shake(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('shake');
+    void el.offsetWidth;
+    el.classList.add('shake');
+    setTimeout(() => el.classList.remove('shake'), 380);
+  }
+
+  function nextTurn() {
+    if (over) return;
+    log('── Turno ' + turno + ' ──────────────────', 'turn');
+
+    const base1 = 15, bonus = 10, total1 = base1 + bonus;
+    log('▶ Guerrero [Armadura][Fuerza] ataca:', 'atk1');
+    log('  Daño base: ' + base1);
+    log('  [FuerzaDecorator] +' + bonus + ' → total: ' + total1, 'bonus');
+    hp2 = Math.max(0, hp2 - total1);
+    shake('card2');
+    log('  Asesino recibe ' + total1 + ' → vida restante: ' + hp2, 'dmg');
+    updateBars();
+    if (hp2 <= 0) { endGame('Guerrero'); return; }
+
+    const base2 = 12, reduccion = 5, veneno = 5;
+    log('▶ Asesino [Veneno] ataca:', 'atk2');
+    log('  Daño base: ' + base2);
+    const ef1 = Math.max(0, base2 - reduccion);
+    log('  [ArmaduraDecorator] reduce ' + reduccion + ' → efectivo: ' + ef1, 'bonus');
+    hp1 = Math.max(0, hp1 - ef1);
+    shake('card1');
+    const ef2 = Math.max(0, veneno - reduccion);
+    log('  [VenenoDecorator] +' + veneno + ' → armadura bloquea → efectivo: ' + ef2, 'bonus');
+    hp1 = Math.max(0, hp1 - ef2);
+    log('  Guerrero recibe ' + (ef1 + ef2) + ' total → vida restante: ' + hp1, 'dmg');
+    updateBars();
+    if (hp1 <= 0) { endGame('Asesino'); return; }
+
+    turno++;
+    if (turno > 10) { endGame(null); }
+  }
+
+  function endGame(winner) {
+    over = true;
+    document.getElementById('btnTurn').disabled = true;
+    if (winner) {
+      log('', '');
+      log('GANADOR: ' + winner + '!', 'win');
+    } else {
+      log('Fin de demo tras 10 turnos.', 'win');
+    }
+  }
+
+  function resetGame() {
+    hp1 = 100; hp2 = 80; turno = 1; over = false;
+    document.getElementById('log').innerHTML =
+      '<div class="log-line" style="color:#e2c97e;text-align:center;">Presiona "Siguiente turno" para comenzar la batalla</div>';
+    document.getElementById('btnTurn').disabled = false;
+    updateBars();
+  }
+</script>
+</body>
+</html>
