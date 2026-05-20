@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.juego.patrones.FactoryTest" time="0.027" tests="3" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.juego.patrones.DecoratorCoberturaTest" time="0.117" tests="6" errors="0" skipped="0" failures="0">
   <properties>
     <property name="awt.toolkit" value="sun.awt.X11.XToolkit"/>
     <property name="java.specification.version" value="11"/>
@@ -56,7 +56,37 @@
     <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
     <property name="java.class.version" value="55.0"/>
   </properties>
-  <testcase name="testAsesinFactory_creaPersonaje" classname="com.juego.patrones.FactoryTest" time="0.007"/>
-  <testcase name="testMagoFactory_creaPersonaje" classname="com.juego.patrones.FactoryTest" time="0.004"/>
-  <testcase name="testGuerreroFactory_creaPersonaje" classname="com.juego.patrones.FactoryTest" time="0.003"/>
+  <testcase name="testArmaduraDecorator_danoMenorQueReduccion" classname="com.juego.patrones.DecoratorCoberturaTest" time="0.054">
+    <system-out><![CDATA[  [Armadura] reduce 5 puntos → daño efectivo: 0
+Thor recibe 0 de danio. Vida restante: 100
+]]></system-out>
+  </testcase>
+  <testcase name="testFuerzaDecorator_atacaConBonus" classname="com.juego.patrones.DecoratorCoberturaTest" time="0.019">
+    <system-out><![CDATA[Thor ataca con 15 de danio base.
+  [Fuerza] +10 de bonus → daño total: 25
+]]></system-out>
+  </testcase>
+  <testcase name="testArmaduraDecorator_reduceDano" classname="com.juego.patrones.DecoratorCoberturaTest" time="0.009">
+    <system-out><![CDATA[  [Armadura] reduce 5 puntos → daño efectivo: 5
+Thor recibe 5 de danio. Vida restante: 95
+]]></system-out>
+  </testcase>
+  <testcase name="testCombinacionDecorators" classname="com.juego.patrones.DecoratorCoberturaTest" time="0.007">
+    <system-out><![CDATA[Guerrero ataca con 15 de danio base.
+  [Fuerza] +10 de bonus → daño total: 25
+  [Armadura] reduce 5 puntos → daño efectivo: 5
+Guerrero recibe 5 de danio. Vida restante: 95
+]]></system-out>
+  </testcase>
+  <testcase name="testVenenoDecorator_atacarCon" classname="com.juego.patrones.DecoratorCoberturaTest" time="0.003">
+    <system-out><![CDATA[Loki ataca con 12 de danio base.
+Thor recibe 12 de danio. Vida restante: 88
+  [Veneno] aplica 5 puntos extra de veneno.
+Thor recibe 5 de danio. Vida restante: 83
+]]></system-out>
+  </testcase>
+  <testcase name="testVenenoDecorator_estaVivo" classname="com.juego.patrones.DecoratorCoberturaTest" time="0.004">
+    <system-out><![CDATA[Loki recibe 200 de danio. Vida restante: 0
+]]></system-out>
+  </testcase>
 </testsuite>

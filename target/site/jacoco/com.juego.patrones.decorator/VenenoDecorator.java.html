@@ -15,11 +15,11 @@ public class VenenoDecorator extends PersonajeDecorator {
     }
 
     public int atacarCon(Personaje objetivo) {
-<span class="nc" id="L18">        int danioBase = personaje.atacar();</span>
-<span class="nc" id="L19">        objetivo.recibirDano(danioBase);</span>
-<span class="nc" id="L20">        System.out.println(&quot;  [Veneno] aplica &quot; + DANO_VENENO + &quot; puntos extra de veneno.&quot;);</span>
-<span class="nc" id="L21">        objetivo.recibirDano(DANO_VENENO);</span>
-<span class="nc" id="L22">        return danioBase + DANO_VENENO;</span>
+<span class="fc" id="L18">        int danioBase = personaje.atacar();</span>
+<span class="fc" id="L19">        objetivo.recibirDano(danioBase);</span>
+<span class="fc" id="L20">        System.out.println(&quot;  [Veneno] aplica &quot; + DANO_VENENO + &quot; puntos extra de veneno.&quot;);</span>
+<span class="fc" id="L21">        objetivo.recibirDano(DANO_VENENO);</span>
+<span class="fc" id="L22">        return danioBase + DANO_VENENO;</span>
     }
 
     @Override
