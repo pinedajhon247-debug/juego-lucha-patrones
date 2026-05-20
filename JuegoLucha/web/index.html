@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JuegoLucha — Inicio</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#06080f;font-family:'Rajdhani',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
+    canvas{position:fixed;inset:0;z-index:0;}
+    .container{position:relative;z-index:1;text-align:center;padding:40px 24px;}
+    .eyebrow{font-size:11px;letter-spacing:5px;color:#c9a84c;text-transform:uppercase;opacity:0.7;margin-bottom:16px;animation:fadeDown 1s ease both;}
+    .title{font-family:'Cinzel Decorative',serif;font-size:clamp(32px,8vw,72px);font-weight:900;background:linear-gradient(135deg,#f0d080,#c9a84c,#8b6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;filter:drop-shadow(0 0 40px rgba(201,168,76,0.4));line-height:1.1;animation:fadeDown 1s 0.2s ease both;opacity:0;}
+    .swords{font-size:clamp(40px,8vw,80px);display:block;margin:24px auto;animation:pulse 2s ease-in-out infinite,fadeDown 1s 0.4s ease both;opacity:0;}
+    .subtitle{font-size:15px;letter-spacing:3px;color:#445;text-transform:uppercase;margin-bottom:48px;animation:fadeDown 1s 0.6s ease both;opacity:0;}
+    .fighters-preview{display:flex;align-items:center;justify-content:center;gap:40px;margin-bottom:48px;animation:fadeUp 1s 0.8s ease both;opacity:0;}
+    .fighter-preview{text-align:center;}
+    .fighter-emoji{font-size:clamp(48px,10vw,80px);display:block;filter:drop-shadow(0 8px 20px rgba(0,0,0,0.6));transition:transform 0.3s;}
+    .fighter-preview:hover .fighter-emoji{transform:scale(1.15) translateY(-8px);}
+    .fighter-pname{font-family:'Cinzel Decorative',serif;font-size:12px;font-weight:700;margin-top:12px;letter-spacing:1px;}
+    .f1 .fighter-pname{color:#4a9eff;} .f2 .fighter-pname{color:#ff6b35;}
+    .fighter-tags{display:flex;flex-wrap:wrap;gap:4px;justify-content:center;margin-top:8px;}
+    .tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:0.5px;}
+    .tag-blue{background:rgba(74,158,255,0.15);color:#90caf9;border:1px solid rgba(74,158,255,0.3);}
+    .tag-purple{background:rgba(124,77,255,0.15);color:#b39ddb;border:1px solid rgba(124,77,255,0.3);}
+    .tag-green{background:rgba(76,175,80,0.15);color:#a5d6a7;border:1px solid rgba(76,175,80,0.3);}
+    .vs-big{font-family:'Cinzel Decorative',serif;font-size:clamp(20px,4vw,36px);font-weight:900;color:#c9a84c;text-shadow:0 0 30px rgba(201,168,76,0.6);animation:pulse 2s ease-in-out infinite;}
+    .divider{display:flex;align-items:center;gap:12px;max-width:300px;margin:0 auto 40px;}
+    .dline{flex:1;height:1px;background:linear-gradient(to right,transparent,#c9a84c,transparent);}
+    .dicon{color:#c9a84c;}
+    .btn-play{font-family:'Cinzel Decorative',serif;font-size:clamp(14px,2vw,18px);font-weight:700;letter-spacing:2px;padding:18px 56px;background:linear-gradient(135deg,#8b6914,#c9a84c,#f0d080);color:#06080f;border:none;border-radius:12px;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;box-shadow:0 4px 30px rgba(201,168,76,0.3);animation:fadeUp 1s 1s ease both;opacity:0;text-decoration:none;display:inline-block;}
+    .btn-play:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 12px 40px rgba(201,168,76,0.5);}
+    .btn-play:active{transform:scale(0.97);}
+    .info{margin-top:32px;font-size:11px;letter-spacing:2px;color:#2a3a4a;text-transform:uppercase;animation:fadeUp 1s 1.2s ease both;opacity:0;}
+    @keyframes fadeDown{from{opacity:0;transform:translateY(-24px);}to{opacity:1;transform:none;}}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:none;}}
+    @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="container">
+  <div class="eyebrow">Ingeniería de Software II — Patrones de Diseño</div>
+  <div class="title">Juego de Lucha</div>
+  <span class="swords">⚔️</span>
+  <div class="subtitle">Decorator · Factory Method · JUnit · GitHub Actions</div>
+
+  <div class="fighters-preview">
+    <div class="fighter-preview f1">
+      <span class="fighter-emoji">🧙</span>
+      <div class="fighter-pname">Guerrero</div>
+      <div class="fighter-tags">
+        <span class="tag tag-blue">🛡 Armadura</span>
+        <span class="tag tag-purple">⚡ Fuerza</span>
+      </div>
+    </div>
+    <div class="vs-big">VS</div>
+    <div class="fighter-preview f2">
+      <span class="fighter-emoji">🥷</span>
+      <div class="fighter-pname">Asesino</div>
+      <div class="fighter-tags">
+        <span class="tag tag-green">☠ Veneno</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"><div class="dline"></div><div class="dicon">◆</div><div class="dline"></div></div>
+  <a href="juego.html" class="btn-play">⚔ Comenzar Batalla</a>
+  <div class="info">Sebastian Ampudia · Yeison Montaño · Jhon Pineda</div>
+</div>
+<script>
+  const c=document.getElementById('c'),ctx=c.getContext('2d');
+  let P=[];
+  function resize(){c.width=innerWidth;c.height=innerHeight;}
+  resize();window.addEventListener('resize',resize);
+  for(let i=0;i<80;i++)P.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.8+0.3,vx:(Math.random()-0.5)*0.4,vy:-Math.random()*0.6-0.1,a:Math.random()*0.6+0.1,col:Math.random()>0.5?'201,168,76':'74,158,255'});
+  (function loop(){ctx.clearRect(0,0,c.width,c.height);P.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.y<-5){p.y=c.height+5;p.x=Math.random()*c.width;}ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(${p.col},${p.a})`;ctx.fill();});requestAnimationFrame(loop);})();
+</script>
+</body>
+</html>
