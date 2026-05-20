@@ -1,7 +1,11 @@
 com/juego/patrones/decorator/ArmaduraDecorator.class
 com/juego/patrones/decorator/FuerzaDecorator.class
+com/juego/patrones/factory/AsesinFactory.class
+com/juego/patrones/factory/MagoFactory.class
 com/juego/patrones/decorator/PersonajeDecorator.class
+com/juego/patrones/factory/PersonajeFactory.class
 com/juego/model/Personaje.class
+com/juego/patrones/factory/GuerreroFactory.class
 com/juego/model/PersonajeBase.class
 com/juego/patrones/decorator/VenenoDecorator.class
 com/juego/juego/JuegoLucha.class

@@ -6,12 +6,12 @@ public class VenenoDecorator extends PersonajeDecorator {
     private static final int DANO_VENENO = 5;
 
     public VenenoDecorator(Personaje personaje) {
-<span class="nc" id="L9">        super(personaje);</span>
-<span class="nc" id="L10">    }</span>
+<span class="fc" id="L9">        super(personaje);</span>
+<span class="fc" id="L10">    }</span>
 
     @Override
     public int atacar() {
-<span class="nc" id="L14">        return personaje.atacar();</span>
+<span class="fc" id="L14">        return personaje.atacar();</span>
     }
 
     public int atacarCon(Personaje objetivo) {
@@ -24,7 +24,7 @@ public class VenenoDecorator extends PersonajeDecorator {
 
     @Override
     public String getNombre() {
-<span class="nc" id="L27">        return personaje.getNombre() + &quot; [Veneno]&quot;;</span>
+<span class="fc" id="L27">        return personaje.getNombre() + &quot; [Veneno]&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

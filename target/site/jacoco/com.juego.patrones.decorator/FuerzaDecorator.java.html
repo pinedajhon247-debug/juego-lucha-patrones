@@ -6,20 +6,20 @@ public class FuerzaDecorator extends PersonajeDecorator {
     private static final int BONUS_DANO = 10;
 
     public FuerzaDecorator(Personaje personaje) {
-<span class="nc" id="L9">        super(personaje);</span>
-<span class="nc" id="L10">    }</span>
+<span class="fc" id="L9">        super(personaje);</span>
+<span class="fc" id="L10">    }</span>
 
     @Override
     public int atacar() {
-<span class="nc" id="L14">        int danioBase  = personaje.atacar();</span>
-<span class="nc" id="L15">        int danioTotal = danioBase + BONUS_DANO;</span>
-<span class="nc" id="L16">        System.out.println(&quot;  [Fuerza] +&quot; + BONUS_DANO + &quot; de bonus → daño total: &quot; + danioTotal);</span>
-<span class="nc" id="L17">        return danioTotal;</span>
+<span class="fc" id="L14">        int danioBase  = personaje.atacar();</span>
+<span class="fc" id="L15">        int danioTotal = danioBase + BONUS_DANO;</span>
+<span class="fc" id="L16">        System.out.println(&quot;  [Fuerza] +&quot; + BONUS_DANO + &quot; de bonus → daño total: &quot; + danioTotal);</span>
+<span class="fc" id="L17">        return danioTotal;</span>
     }
 
     @Override
     public String getNombre() {
-<span class="nc" id="L22">        return personaje.getNombre() + &quot; [Fuerza]&quot;;</span>
+<span class="fc" id="L22">        return personaje.getNombre() + &quot; [Fuerza]&quot;;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

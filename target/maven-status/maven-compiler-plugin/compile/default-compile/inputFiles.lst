@@ -5,3 +5,7 @@
 /workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/FuerzaDecorator.java
 /workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/PersonajeDecorator.java
 /workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/VenenoDecorator.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/factory/AsesinFactory.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/factory/GuerreroFactory.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/factory/MagoFactory.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/factory/PersonajeFactory.java

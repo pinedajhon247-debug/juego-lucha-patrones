@@ -5,9 +5,9 @@ public abstract class PersonajeDecorator implements Personaje {
 
     protected final Personaje personaje;
 
-<span class="nc" id="L8">    public PersonajeDecorator(Personaje personaje) {</span>
-<span class="nc" id="L9">        this.personaje = personaje;</span>
-<span class="nc" id="L10">    }</span>
+<span class="fc" id="L8">    public PersonajeDecorator(Personaje personaje) {</span>
+<span class="fc" id="L9">        this.personaje = personaje;</span>
+<span class="fc" id="L10">    }</span>
 
     @Override
 <span class="nc" id="L13">    public int atacar() { return personaje.atacar(); }</span>
@@ -16,7 +16,7 @@ public abstract class PersonajeDecorator implements Personaje {
 <span class="nc" id="L16">    public void recibirDano(int dano) { personaje.recibirDano(dano); }</span>
 
     @Override
-<span class="nc" id="L19">    public boolean estaVivo() { return personaje.estaVivo(); }</span>
+<span class="fc" id="L19">    public boolean estaVivo() { return personaje.estaVivo(); }</span>
 
     @Override
 <span class="nc" id="L22">    public String getNombre() { return personaje.getNombre(); }</span>
