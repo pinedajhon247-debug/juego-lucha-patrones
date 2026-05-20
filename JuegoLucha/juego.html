@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JuegoLucha — Patrones de Diseño</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #f0d080;
+      --blue: #4a9eff;
+      --blue-dark: #1a3a6e;
+      --orange: #ff6b35;
+      --orange-dark: #8b2a00;
+      --green: #4caf7d;
+      --red: #e53935;
+      --bg: #06080f;
+      --surface: #0d1220;
+      --surface2: #111827;
+      --border: #1e2d4a;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      font-family: 'Rajdhani', sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: #ccc;
+    }
+
+    /* Fondo animado con partículas */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 24px 16px 40px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+      animation: fadeDown 0.8s ease both;
+    }
+
+    .header-eyebrow {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: 0.7;
+    }
+
+    .header-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(22px, 5vw, 38px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold) 50%, #8b6914 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      text-shadow: none;
+      filter: drop-shadow(0 0 30px rgba(201,168,76,0.3));
+    }
+
+    .header-sub {
+      font-size: 13px;
+      letter-spacing: 3px;
+      color: #445;
+      margin-top: 10px;
+      text-transform: uppercase;
+    }
+
+    /* Divider decorativo */
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 0 auto 28px;
+      max-width: 400px;
+    }
+    .divider-line { flex: 1; height: 1px; background: linear-gradient(to right, transparent, var(--gold), transparent); }
+    .divider-icon { color: var(--gold); font-size: 16px; }
+
+    /* Arena principal */
+    .arena {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px 24px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 60px rgba(0,0,0,0.8), inset 0 1px 0 rgba(255,255,255,0.04);
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .arena::before {
+      content: '';
+      position: absolute;
+      top: -1px; left: 20%; right: 20%;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--gold), transparent);
+    }
+
+    /* Fighters */
+    .fighters {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+
+    .fighter-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      position: relative;
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+      overflow: hidden;
+    }
+
+    .fighter-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+      border-radius: 16px;
+    }
+
+    .fighter-card.p1::before { background: radial-gradient(ellipse at 50% 0%, rgba(74,158,255,0.12), transparent 70%); }
+    .fighter-card.p2::before { background: radial-gradient(ellipse at 50% 0%, rgba(255,107,53,0.12), transparent 70%); }
+    .fighter-card.active::before { opacity: 1; }
+    .fighter-card.active.p1 { border-color: var(--blue); box-shadow: 0 0 20px rgba(74,158,255,0.2); }
+    .fighter-card.active.p2 { border-color: var(--orange); box-shadow: 0 0 20px rgba(255,107,53,0.2); }
+
+    .fighter-card.hit {
+      animation: hitShake 0.4s ease;
+    }
+
+    @keyframes hitShake {
+      0%,100% { transform: translateX(0) scale(1); }
+      20% { transform: translateX(-8px) scale(0.98); }
+      40% { transform: translateX(8px) scale(0.98); }
+      60% { transform: translateX(-5px); }
+      80% { transform: translateX(5px); }
+    }
+
+    .fighter-card.dead {
+      opacity: 0.4;
+      filter: grayscale(1);
+    }
+
+    .fighter-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+
+    .p1 .fighter-name { color: var(--blue); }
+    .p2 .fighter-name { color: var(--orange); }
+
+    .fighter-avatar {
+      font-size: 64px;
+      line-height: 1;
+      margin: 8px 0;
+      display: block;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+      transition: transform 0.2s;
+    }
+
+    .fighter-card:hover .fighter-avatar { transform: scale(1.08) translateY(-3px); }
+
+    .badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      justify-content: center;
+      margin: 10px 0;
+    }
+
+    .badge {
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+
+    .badge-fuerza   { background: rgba(124,77,255,0.2); color: #b39ddb; border: 1px solid rgba(124,77,255,0.3); }
+    .badge-armadura { background: rgba(74,158,255,0.2); color: #90caf9; border: 1px solid rgba(74,158,255,0.3); }
+    .badge-veneno   { background: rgba(76,175,80,0.2);  color: #a5d6a7; border: 1px solid rgba(76,175,80,0.3); }
+
+    /* HP Bar */
+    .hp-section { margin-top: 14px; }
+    .hp-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+    .hp-label { font-size: 10px; letter-spacing: 2px; color: #445; text-transform: uppercase; }
+    .hp-val { font-size: 14px; font-weight: 700; }
+    .p1 .hp-val { color: var(--blue); }
+    .p2 .hp-val { color: var(--orange); }
+
+    .hp-track {
+      height: 8px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 4px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+
+    .hp-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.6s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+
+    .hp-fill::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 50%;
+      background: rgba(255,255,255,0.15);
+      border-radius: 4px 4px 0 0;
+    }
+
+    .p1 .hp-fill { background: linear-gradient(90deg, #1a5fa0, var(--blue)); }
+    .p2 .hp-fill { background: linear-gradient(90deg, #8b2a00, var(--orange)); }
+
+    /* VS */
+    .vs-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 80px;
+      gap: 8px;
+    }
+
+    .vs-text {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: 20px;
+      font-weight: 900;
+      color: var(--gold);
+      text-shadow: 0 0 20px rgba(201,168,76,0.5);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { opacity: 1; text-shadow: 0 0 20px rgba(201,168,76,0.5); }
+      50%      { opacity: 0.7; text-shadow: 0 0 40px rgba(201,168,76,0.8); }
+    }
+
+    .turn-badge {
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      color: var(--gold);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+
+    /* Log */
+    .log-container {
+      margin-bottom: 20px;
+    }
+
+    .log-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .log-title {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #445;
+      text-transform: uppercase;
+    }
+
+    .log-box {
+      background: #08090f;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      min-height: 160px;
+      max-height: 200px;
+      overflow-y: auto;
+      font-size: 13px;
+      line-height: 1.9;
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+
+    .log-box::-webkit-scrollbar { width: 4px; }
+    .log-box::-webkit-scrollbar-track { background: transparent; }
+    .log-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+    .log-line { animation: fadeIn 0.3s ease both; }
+    .log-line.turn  { color: var(--gold); font-weight: 700; font-size: 11px; letter-spacing: 2px; margin-top: 8px; text-transform: uppercase; }
+    .log-line.atk1  { color: #6ab0f5; }
+    .log-line.atk2  { color: #ff8c5a; }
+    .log-line.bonus { color: #81c784; padding-left: 16px; font-size: 12px; }
+    .log-line.dmg   { color: #ef9a9a; padding-left: 16px; font-size: 12px; }
+    .log-line.win   { color: var(--gold); font-weight: 700; font-size: 15px; text-align: center; margin-top: 12px; letter-spacing: 1px; }
+    .log-line.start { color: #445; text-align: center; font-style: italic; }
+
+    @keyframes fadeIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+
+    /* Controles */
+    .controls {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    .btn {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 13px 32px;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.15s, box-shadow 0.15s, opacity 0.2s;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.1);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .btn:hover::before { opacity: 1; }
+    .btn:active { transform: scale(0.97); }
+    .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+    .btn:disabled::before { display: none; }
+
+    .btn-turn {
+      background: linear-gradient(135deg, #1a5fa0, var(--blue));
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(74,158,255,0.3);
+      flex: 1;
+      max-width: 260px;
+    }
+
+    .btn-turn:hover:not(:disabled) {
+      box-shadow: 0 6px 30px rgba(74,158,255,0.5);
+      transform: translateY(-1px);
+    }
+
+    .btn-reset {
+      background: var(--surface2);
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.3);
+    }
+
+    .btn-reset:hover {
+      border-color: var(--gold);
+      box-shadow: 0 0 16px rgba(201,168,76,0.2);
+    }
+
+    /* Winner overlay */
+    .winner-overlay {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(6,8,15,0.92);
+      border-radius: 20px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      z-index: 10;
+      animation: fadeIn 0.5s ease;
+    }
+
+    .winner-overlay.show { display: flex; }
+
+    .winner-crown { font-size: 56px; animation: bounce 1s ease infinite; }
+    @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+
+    .winner-label {
+      font-size: 12px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      opacity: 0.7;
+    }
+
+    .winner-name {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(20px, 5vw, 32px);
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .winner-btn {
+      margin-top: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 11px 28px;
+      background: linear-gradient(135deg, #8b6914, var(--gold));
+      color: #06080f;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s;
+    }
+
+    .winner-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,168,76,0.4); }
+
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-20px); } to { opacity:1; transform:none; } }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(20px);  } to { opacity:1; transform:none; } }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+
+<div class="wrapper">
+  <div class="header">
+    <div class="header-eyebrow">Ingeniería de Software II</div>
+    <div class="header-title">⚔ Juego de Lucha ⚔</div>
+    <div class="header-sub">Patrón de Diseño: Decorator + Factory Method</div>
+  </div>
+
+  <div class="divider">
+    <div class="divider-line"></div>
+    <div class="divider-icon">◆</div>
+    <div class="divider-line"></div>
+  </div>
+
+  <div class="arena">
+    <!-- Winner overlay -->
+    <div class="winner-overlay" id="winnerOverlay">
+      <div class="winner-crown">👑</div>
+      <div class="winner-label">¡Victoria!</div>
+      <div class="winner-name" id="winnerName"></div>
+      <button class="winner-btn" onclick="resetGame()">↺ Nueva batalla</button>
+    </div>
+
+    <!-- Fighters -->
+    <div class="fighters">
+      <!-- Jugador 1 -->
+      <div class="fighter-card p1" id="card1">
+        <div class="fighter-name">Guerrero</div>
+        <span class="fighter-avatar">🧙</span>
+        <div class="badges">
+          <span class="badge badge-armadura">🛡 Armadura −5</span>
+          <span class="badge badge-fuerza">⚡ Fuerza +10</span>
+        </div>
+        <div class="hp-section">
+          <div class="hp-header">
+            <span class="hp-label">Vida</span>
+            <span class="hp-val" id="hp1">100 / 100</span>
+          </div>
+          <div class="hp-track">
+            <div class="hp-fill" id="bar1" style="width:100%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VS -->
+      <div class="vs-section">
+        <div class="vs-text">VS</div>
+        <div class="turn-badge" id="turnBadge">Turno 1</div>
+      </div>
+
+      <!-- Jugador 2 -->
+      <div class="fighter-card p2" id="card2">
+        <div class="fighter-name">Asesino</div>
+        <span class="fighter-avatar">🥷</span>
+        <div class="badges">
+          <span class="badge badge-veneno">☠ Veneno +5</span>
+        </div>
+        <div class="hp-section">
+          <div class="hp-header">
+            <span class="hp-label">Vida</span>
+            <span class="hp-val" id="hp2">80 / 80</span>
+          </div>
+          <div class="hp-track">
+            <div class="hp-fill" id="bar2" style="width:100%"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Log -->
+    <div class="log-container">
+      <div class="log-header">
+        <div class="divider-line" style="max-width:40px"></div>
+        <div class="log-title">Registro de batalla</div>
+        <div class="divider-line"></div>
+      </div>
+      <div class="log-box" id="log">
+        <div class="log-line start">Presiona "Atacar" para iniciar la batalla...</div>
+      </div>
+    </div>
+
+    <!-- Controles -->
+    <div class="controls">
+      <button class="btn btn-turn" id="btnTurn" onclick="nextTurn()">⚔ Atacar</button>
+      <button class="btn btn-reset" onclick="resetGame()">↺</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Partículas de fondo
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let particles = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  resize();
+  window.addEventListener('resize', resize);
+
+  for (let i = 0; i < 60; i++) {
+    particles.push({
+      x: Math.random() * window.innerWidth,
+      y: Math.random() * window.innerHeight,
+      r: Math.random() * 1.5 + 0.3,
+      vx: (Math.random() - 0.5) * 0.3,
+      vy: -Math.random() * 0.5 - 0.1,
+      alpha: Math.random() * 0.5 + 0.1,
+      color: Math.random() > 0.5 ? '201,168,76' : '74,158,255'
+    });
+  }
+
+  function animParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      if (p.y < -5) { p.y = canvas.height + 5; p.x = Math.random() * canvas.width; }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.color},${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(animParticles);
+  }
+  animParticles();
+
+  // Juego
+  let hp1 = 100, hp2 = 80;
+  const MAX1 = 100, MAX2 = 80;
+  let turno = 1, over = false;
+
+  function log(text, cls) {
+    const box = document.getElementById('log');
+    const d = document.createElement('div');
+    d.className = 'log-line ' + (cls || '');
+    d.textContent = text;
+    box.appendChild(d);
+    box.scrollTop = box.scrollHeight;
+  }
+
+  function updateBars() {
+    const p1 = Math.max(0, Math.round(hp1 / MAX1 * 100));
+    const p2 = Math.max(0, Math.round(hp2 / MAX2 * 100));
+    document.getElementById('bar1').style.width = p1 + '%';
+    document.getElementById('bar2').style.width = p2 + '%';
+    document.getElementById('hp1').textContent = Math.max(0, hp1) + ' / ' + MAX1;
+    document.getElementById('hp2').textContent = Math.max(0, hp2) + ' / ' + MAX2;
+  }
+
+  function shake(id) {
+    const el = document.getElementById(id);
+    el.classList.remove('hit');
+    void el.offsetWidth;
+    el.classList.add('hit');
+    setTimeout(() => el.classList.remove('hit'), 400);
+  }
+
+  function setActive(id) {
+    document.getElementById('card1').classList.remove('active');
+    document.getElementById('card2').classList.remove('active');
+    document.getElementById(id).classList.add('active');
+  }
+
+  function nextTurn() {
+    if (over) return;
+    document.getElementById('turnBadge').textContent = 'Turno ' + turno;
+    log('── TURNO ' + turno + ' ──────────────', 'turn');
+
+    setActive('card1');
+    const base1 = 15, bonus = 10, total1 = base1 + bonus;
+    log('⚔ Guerrero [Armadura][Fuerza] ataca:', 'atk1');
+    log('  Daño base: ' + base1 + '  +  [FuerzaDecorator] +' + bonus + '  =  ' + total1, 'bonus');
+    hp2 = Math.max(0, hp2 - total1);
+    shake('card2');
+    log('  Asesino recibe ' + total1 + ' daño → vida: ' + hp2, 'dmg');
+    updateBars();
+
+    if (hp2 <= 0) {
+      document.getElementById('card2').classList.add('dead');
+      endGame('Guerrero ⚔');
+      return;
+    }
+
+    setTimeout(() => {
+      setActive('card2');
+      const base2 = 12, reduccion = 5, veneno = 5;
+      log('☠ Asesino [Veneno] ataca:', 'atk2');
+      const ef1 = Math.max(0, base2 - reduccion);
+      log('  Daño base: ' + base2 + '  −  [ArmaduraDecorator] ' + reduccion + '  =  ' + ef1, 'bonus');
+      hp1 = Math.max(0, hp1 - ef1);
+      shake('card1');
+      const ef2 = Math.max(0, veneno - reduccion);
+      log('  [VenenoDecorator] +' + veneno + '  −  armadura ' + reduccion + '  =  ' + ef2 + ' extra', 'bonus');
+      hp1 = Math.max(0, hp1 - ef2);
+      log('  Guerrero recibe ' + (ef1 + ef2) + ' daño → vida: ' + hp1, 'dmg');
+      updateBars();
+
+      if (hp1 <= 0) {
+        document.getElementById('card1').classList.add('dead');
+        endGame('Asesino ☠');
+        return;
+      }
+
+      turno++;
+      document.getElementById('turnBadge').textContent = 'Turno ' + turno;
+      if (turno > 10) endGame(null);
+    }, 600);
+  }
+
+  function endGame(winner) {
+    over = true;
+    document.getElementById('btnTurn').disabled = true;
+    if (winner) {
+      document.getElementById('winnerName').textContent = winner;
+      document.getElementById('winnerOverlay').classList.add('show');
+    } else {
+      log('Empate — fin de la demo.', 'win');
+    }
+  }
+
+  function resetGame() {
+    hp1 = 100; hp2 = 80; turno = 1; over = false;
+    document.getElementById('log').innerHTML = '<div class="log-line start">Presiona "Atacar" para iniciar la batalla...</div>';
+    document.getElementById('btnTurn').disabled = false;
+    document.getElementById('winnerOverlay').classList.remove('show');
+    document.getElementById('card1').classList.remove('active','dead');
+    document.getElementById('card2').classList.remove('active','dead');
+    document.getElementById('turnBadge').textContent = 'Turno 1';
+    updateBars();
+  }
+</script>
+</body>
+</html>
