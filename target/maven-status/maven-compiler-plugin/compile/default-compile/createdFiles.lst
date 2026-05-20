@@ -1,0 +1,7 @@
+com/juego/patrones/decorator/ArmaduraDecorator.class
+com/juego/patrones/decorator/FuerzaDecorator.class
+com/juego/patrones/decorator/PersonajeDecorator.class
+com/juego/model/Personaje.class
+com/juego/model/PersonajeBase.class
+com/juego/patrones/decorator/VenenoDecorator.class
+com/juego/juego/JuegoLucha.class

@@ -1,0 +1,7 @@
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/juego/JuegoLucha.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/model/Personaje.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/model/PersonajeBase.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/ArmaduraDecorator.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/FuerzaDecorator.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/PersonajeDecorator.java
+/workspaces/juego-lucha-patrones/src/main/java/com/juego/patrones/decorator/VenenoDecorator.java
