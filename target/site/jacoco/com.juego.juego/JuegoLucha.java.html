@@ -6,53 +6,53 @@ import com.juego.patrones.decorator.*;
 
     public static void main(String[] args) {
 
-<span class="nc" id="L9">        Personaje jugador1 = new FuerzaDecorator(</span>
+<span class="fc" id="L9">        Personaje jugador1 = new FuerzaDecorator(</span>
                                 new ArmaduraDecorator(
                                     new PersonajeBase(&quot;Guerrero&quot;, 100, 15)));
 
-<span class="nc" id="L13">        VenenoDecorator jugador2 = new VenenoDecorator(</span>
+<span class="fc" id="L13">        VenenoDecorator jugador2 = new VenenoDecorator(</span>
                                        new PersonajeBase(&quot;Asesino&quot;, 80, 12));
 
-<span class="nc" id="L16">        System.out.println(&quot;==============================================&quot;);</span>
-<span class="nc" id="L17">        System.out.println(&quot;         JUEGO DE LUCHA&quot;);</span>
-<span class="nc" id="L18">        System.out.println(&quot;==============================================&quot;);</span>
-<span class="nc" id="L19">        System.out.println(&quot;Jugador 1: &quot; + jugador1.getNombre());</span>
-<span class="nc" id="L20">        System.out.println(&quot;Jugador 2: &quot; + jugador2.getNombre());</span>
-<span class="nc" id="L21">        System.out.println(&quot;----------------------------------------------\n&quot;);</span>
+<span class="fc" id="L16">        System.out.println(&quot;==============================================&quot;);</span>
+<span class="fc" id="L17">        System.out.println(&quot;         JUEGO DE LUCHA&quot;);</span>
+<span class="fc" id="L18">        System.out.println(&quot;==============================================&quot;);</span>
+<span class="fc" id="L19">        System.out.println(&quot;Jugador 1: &quot; + jugador1.getNombre());</span>
+<span class="fc" id="L20">        System.out.println(&quot;Jugador 2: &quot; + jugador2.getNombre());</span>
+<span class="fc" id="L21">        System.out.println(&quot;----------------------------------------------\n&quot;);</span>
 
-<span class="nc" id="L23">        int turno = 1;</span>
+<span class="fc" id="L23">        int turno = 1;</span>
 
-<span class="nc bnc" id="L25" title="All 4 branches missed.">        while (jugador1.estaVivo() &amp;&amp; jugador2.estaVivo()) {</span>
+<span class="pc bpc" id="L25" title="2 of 4 branches missed.">        while (jugador1.estaVivo() &amp;&amp; jugador2.estaVivo()) {</span>
 
-<span class="nc" id="L27">            System.out.println(&quot;== Turno &quot; + turno + &quot; ==&quot;);</span>
+<span class="fc" id="L27">            System.out.println(&quot;== Turno &quot; + turno + &quot; ==&quot;);</span>
 
-<span class="nc" id="L29">            System.out.println(&quot;▶ &quot; + jugador1.getNombre() + &quot; ataca:&quot;);</span>
-<span class="nc" id="L30">            int dano1 = jugador1.atacar();</span>
-<span class="nc" id="L31">            jugador2.recibirDano(dano1);</span>
+<span class="fc" id="L29">            System.out.println(&quot;▶ &quot; + jugador1.getNombre() + &quot; ataca:&quot;);</span>
+<span class="fc" id="L30">            int dano1 = jugador1.atacar();</span>
+<span class="fc" id="L31">            jugador2.recibirDano(dano1);</span>
 
-<span class="nc bnc" id="L33" title="All 2 branches missed.">            if (!jugador2.estaVivo()) break;</span>
+<span class="fc bfc" id="L33" title="All 2 branches covered.">            if (!jugador2.estaVivo()) break;</span>
 
-<span class="nc" id="L35">            System.out.println(&quot;\n▶ &quot; + jugador2.getNombre() + &quot; ataca:&quot;);</span>
-<span class="nc" id="L36">            jugador2.atacarCon(jugador1);</span>
+<span class="fc" id="L35">            System.out.println(&quot;\n▶ &quot; + jugador2.getNombre() + &quot; ataca:&quot;);</span>
+<span class="fc" id="L36">            jugador2.atacarCon(jugador1);</span>
 
-<span class="nc" id="L38">            System.out.println();</span>
-<span class="nc" id="L39">            turno++;</span>
+<span class="fc" id="L38">            System.out.println();</span>
+<span class="fc" id="L39">            turno++;</span>
 
-<span class="nc bnc" id="L41" title="All 2 branches missed.">            if (turno &gt; 10) {</span>
+<span class="pc bpc" id="L41" title="1 of 2 branches missed.">            if (turno &gt; 10) {</span>
 <span class="nc" id="L42">                System.out.println(&quot;Demo terminada tras 10 turnos.&quot;);</span>
 <span class="nc" id="L43">                break;</span>
             }
-<span class="nc" id="L45">        }</span>
+<span class="fc" id="L45">        }</span>
 
-<span class="nc" id="L47">        System.out.println(&quot;==============================================&quot;);</span>
-<span class="nc bnc" id="L48" title="All 2 branches missed.">        if (!jugador1.estaVivo()) {</span>
+<span class="fc" id="L47">        System.out.println(&quot;==============================================&quot;);</span>
+<span class="pc bpc" id="L48" title="1 of 2 branches missed.">        if (!jugador1.estaVivo()) {</span>
 <span class="nc" id="L49">            System.out.println(&quot;Ganador: &quot; + jugador2.getNombre());</span>
-<span class="nc bnc" id="L50" title="All 2 branches missed.">        } else if (!jugador2.estaVivo()) {</span>
-<span class="nc" id="L51">            System.out.println(&quot;Ganador: &quot; + jugador1.getNombre());</span>
+<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        } else if (!jugador2.estaVivo()) {</span>
+<span class="fc" id="L51">            System.out.println(&quot;Ganador: &quot; + jugador1.getNombre());</span>
         } else {
 <span class="nc" id="L53">            System.out.println(&quot;Empate (fin de demo)&quot;);</span>
         }
-<span class="nc" id="L55">        System.out.println(&quot;==============================================&quot;);</span>
-<span class="nc" id="L56">    }</span>
+<span class="fc" id="L55">        System.out.println(&quot;==============================================&quot;);</span>
+<span class="fc" id="L56">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.9.202303310957</span></div></body></html>

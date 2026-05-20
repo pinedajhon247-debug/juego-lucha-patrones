@@ -1,4 +1,5 @@
 com/juego/patrones/DecoratorTest.class
 com/juego/patrones/DecoratorCoberturaTest.class
+com/juego/juego/JuegoLuchaTest.class
 com/juego/model/PersonajeTest.class
 com/juego/patrones/FactoryTest.class
