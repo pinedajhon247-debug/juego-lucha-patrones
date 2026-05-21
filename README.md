@@ -23,7 +23,7 @@ Juego de lucha por turnos en Java que aplica patrones de diseño estructurales y
 - MagoFactory: crea Mago con Fuerza y Veneno
 
 ## Pruebas
-- 14 tests con JUnit 5 y Mockito
+- 22 tests con JUnit 5 y Mockito
 - Cobertura con JaCoCo
 - CI con GitHub Actions
 
